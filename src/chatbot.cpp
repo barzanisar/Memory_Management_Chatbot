@@ -45,6 +45,101 @@ ChatBot::~ChatBot()
 //// STUDENT CODE
 ////
 
+// copy constructor
+ChatBot::ChatBot(const ChatBot &other)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+
+    // load image into heap memory
+    _image = NULL;
+    if (other._image != NULL)
+    {
+        //_image = new wxBitmap(*(other._image));
+        _image = new wxBitmap();
+        *_image = *(other._image);
+    }
+
+    // handles pointing to the same resource/memory block
+    _chatLogic = other._chatLogic;
+    _rootNode = other._rootNode;
+    if (_chatLogic != nullptr)
+        _chatLogic->SetChatbotHandle(this);
+}
+
+// copy assignment operator
+ChatBot &ChatBot::operator=(const ChatBot &other)
+{
+    std::cout << "ChatBot Assignment " << std::endl;
+    if (this == &other)
+        return *this;
+
+    // deallocate heap memory
+    if (_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    {
+        delete _image;
+        _image = NULL;
+    }
+
+    if (other._image != NULL)
+    {
+        //_image = new wxBitmap(*(other._image));
+        _image = new wxBitmap();
+        *_image = *(other._image);
+    }
+
+    // handles pointing to the same resource/memory block
+    _chatLogic = other._chatLogic;
+    _rootNode = other._rootNode;
+    if (_chatLogic != nullptr)
+        _chatLogic->SetChatbotHandle(this);
+
+    return *this;
+}
+
+// move constructor
+ChatBot::ChatBot(ChatBot &&other)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+
+    // handles pointing to the same resource/memory block
+    _chatLogic = other._chatLogic;
+    _rootNode = other._rootNode;
+    if (_chatLogic != nullptr)
+        _chatLogic->SetChatbotHandle(this);
+
+    _image = other._image;
+    other._image = NULL;
+    other._chatLogic = nullptr;
+    other._rootNode = nullptr;
+}
+
+// move assignment operator
+ChatBot &ChatBot::operator=(ChatBot &&other)
+{
+    std::cout << "ChatBot Move Assignment " << std::endl;
+
+    if (this == &other)
+        return *this;
+    // handles pointing to the same resource/memory block
+    _chatLogic = other._chatLogic;
+    _rootNode = other._rootNode;
+    if (_chatLogic != nullptr)
+        _chatLogic->SetChatbotHandle(this);
+
+    // deallocate heap memory
+    if (_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    {
+        delete _image;
+    }
+
+    _image = other._image;
+    other._image = NULL;
+
+    other._chatLogic = nullptr;
+    other._rootNode = nullptr;
+    return *this;
+}
+
 ////
 //// EOF STUDENT CODE
 
